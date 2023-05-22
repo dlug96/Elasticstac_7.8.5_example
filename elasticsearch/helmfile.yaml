@@ -1,0 +1,16 @@
+repositories:
+- name: elastic-stack
+  url: https://helm.elastic.co
+
+environments:
+  dev-gcp:
+  prod:
+
+releases:
+- name: elasticsearch
+  namespace: gitlab-managed-apps
+  chart: elastic/elasticsearch
+  version: 8.5.1
+  installed: true
+  values:
+    - values.yaml.gotmpl

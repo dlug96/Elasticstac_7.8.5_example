@@ -1,0 +1,16 @@
+repositories:
+- name: elastic
+  url: https://helm.elastic.co
+
+environments:
+  dev-gcp:
+  prod:
+
+releases:
+- name: logstash
+  namespace: gitlab-managed-apps
+  chart: elastic/logstash
+  version: 8.5.1
+  installed: true
+  values:
+    - values.yaml.gotmpl

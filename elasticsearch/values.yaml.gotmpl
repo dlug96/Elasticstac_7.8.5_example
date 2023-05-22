@@ -1,0 +1,60 @@
+replicas: 2
+minimumMasterNodes: 1
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
+
+config:
+  elasticsearch.yml: |
+    xpack.security.enabled: true
+    xpack.security.authc:
+      anonymous:
+        username: anonymous
+        roles: superuser
+    xpack.security.authc.realms:
+      kubernetes:
+        type: kubernetes
+        order: 2
+    xpack.security.authc.token.enabled: true
+    xpack.security.http.ssl.enabled: true
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  className: "nginx"
+  pathtype: ImplementationSpecific
+  hosts:
+    - host: hostname.com
+      paths:
+        - path: /gma/elasticsearch
+  tls:
+    - secretName: tls-secret
+      hosts:
+        - hostname.com
+
+rbac:
+  create: true
+
+elasticsearchUsers:
+  logstash_pipeline:
+    password: 6VjesJENr398YzOZ
+    roles:
+      - logstash_admin
+
+serviceAccount:
+  create: true
+  name: elasticsearch
+
+protocol: https
+createCert: true
+
+
+
